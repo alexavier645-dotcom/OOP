@@ -5,12 +5,17 @@ class Character:
         self.health = health
         self.attack_power = attack_power
         self.max_health = health  
+        self.evade_next = False
 
     def attack(self, opponent):
-        opponent.health -= self.attack_power
-        print(f"{self.name} attacks {opponent.name} for {self.attack_power} damage!")
-        if opponent.health <= 0:
-            print(f"{opponent.name} has been defeated!")
+        if opponent.evade_next == True:
+            print(f"{opponent.name} 'evades attack. No damage done.")
+            opponent.evade_next = False
+        else:
+            opponent.health -= self.attack_power
+            print(f"{self.name} attacks {opponent.name} for {self.attack_power} damage!")
+            if  opponent.health <= 0:
+                print(f"{opponent.name} has been defeated!")
 
     def display_stats(self):
         print(f"{self.name}'s Stats - Health: {self.health}/{self.max_health}, Attack Power: {self.attack_power}")
@@ -42,29 +47,28 @@ class EvilWizard(Character):
 # Create Archer class
 class Archer(Character):
     def __init__(self, name):
-        super().__init__(name, health=125, attack_power=25, evade_next = False)
+        super().__init__(name, health=125, attack_power=25, )
+        self.evade_next = False
 
     def quick_shot(self, opponent):
         opponent.health -= self.attack_power*2
         print(f"{self.name} attacks {opponent.name} for {self.attack_power}*2  ")
+        self.evade_next = True
 
-    def set_evade(self):
-        self.evade_next = True    
+    
+            
 
-    def evade(self, opponent):
-        if self.evade_next == True:
-            self.health == self.health
-            print(f"{self.name} health is unchanged by {opponent}'s attack due to Evade.")
-            self.evade_next = False
+    
 
     def recovery(self):
-        self.health == self.max_health -15
+        self.health = self.max_health -15
 
 
 # Create Paladin class 
 class Paladin(Character):
     def __init__(self, name):
-        super().__init__(name, health=150, attack_power=30, divine_sheild = False)
+        super().__init__(name, health=150, attack_power=30, )
+        self.divine_sheild = False
 
     def holy_strike(self, opponent):
         opponent.health -= self.attack_power*2
@@ -132,8 +136,9 @@ def battle(player, wizard):
             print(f"{player.name} has been defeated!")
             break
 
-    if wizard.health <= 0:
-        print(f"The wizard {wizard.name} has been defeated by {player.name}!")
+        if wizard.health <= 0:
+            print(f"The wizard {wizard.name} has been defeated by {player.name}!")
+            break
 
 def main():
     player = create_character()
